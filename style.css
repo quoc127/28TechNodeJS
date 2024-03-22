@@ -1,0 +1,7 @@
+body.dark {
+    background-color: black;
+}
+
+body.dark .full-name{
+    color: white;
+}
