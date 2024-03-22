@@ -32,8 +32,30 @@ const fullName = localStorage.getItem("fullName");
 const text = document.querySelector("#text");
 text.innerHTML = fullName;
 
-//Change mode
-const currentMode = localStorage.getItem("mode");
+//Change mode localStorage
+// const currentMode = localStorage.getItem("mode");
+// if (currentMode) {
+//   const body = document.querySelector("body");
+//   body.classList.toggle(currentMode);
+// }
+
+// const changeMode = document.querySelector("#change-mode");
+// changeMode.addEventListener("click", () => {
+//   const body = document.querySelector("body");
+//   body.classList.toggle("dark");
+
+//   const currentMode = localStorage.getItem("mode");
+
+//   if (currentMode) {
+//     localStorage.setItem("mode", "");
+//   } else {
+//     localStorage.setItem("mode", "dark");
+//   }
+// });
+//End change mod localStorage
+
+// sessionStorage
+const currentMode = sessionStorage.getItem("mode");
 if (currentMode) {
   const body = document.querySelector("body");
   body.classList.toggle(currentMode);
@@ -44,12 +66,26 @@ changeMode.addEventListener("click", () => {
   const body = document.querySelector("body");
   body.classList.toggle("dark");
 
-  const currentMode = localStorage.getItem("mode");
+  const currentMode = sessionStorage.getItem("mode");
 
   if (currentMode) {
-    localStorage.setItem("mode", "");
+    sessionStorage.setItem("mode", "");
   } else {
-    localStorage.setItem("mode", "dark");
+    sessionStorage.setItem("mode", "dark");
   }
 });
-//End change mod
+const resetMode = document.querySelector("#reset-mode");
+resetMode.addEventListener("click", () => {
+  sessionStorage.removeItem("mode");
+  const body = document.querySelector("body");
+  body.classList.remove("dark");
+});
+// end sessionStorage
+
+// clear all
+const clearAll = document.querySelector("#clear-all");
+clearAll.addEventListener("click", () => {
+  sessionStorage.clear();
+  const body = document.querySelector("body");
+  body.classList.remove("dark");
+});
