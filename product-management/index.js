@@ -9,6 +9,10 @@ const port = process.env.PORT;
 app.set("views", "./views");
 app.set("view engine", "pug");
 
+
+// use files in public folder
+app.use(express.static("public"));
+
 // Routes
 route(app);
 
