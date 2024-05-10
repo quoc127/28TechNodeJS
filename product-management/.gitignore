@@ -4,6 +4,6 @@
 #misc
 .env
 
-#package json
-package-lok.json
+# Package json
+package-lock.json
 package.json
