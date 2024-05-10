@@ -1,6 +1,8 @@
 const Product = require("../../models/product.model");
 
-const filterStatusHelper = require("../../helpers/filterStatus")
+const filterStatusHelper = require("../../helpers/filterStatus");
+const searchrStatusHelper = require("../../helpers/search")
+
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
@@ -17,12 +19,11 @@ module.exports.index = async (req, res) => {
   console.log(req.query.status);
 
   // Search function
-  let keyword = "";
-  if (req.query.keyword) {
-    keyword = (req.query.keyword);
-    const regex = new RegExp(keyword, "i");
-    find.title = regex;
+  const objectSearch = searchrStatusHelper(req.query);
+  if (objectSearch.regex) {
+    find.title = objectSearch.regex;
   }
+ 
 
   const products = await Product.find(find);
 
@@ -30,6 +31,6 @@ module.exports.index = async (req, res) => {
     pageTitle: "danh sách sản phẩm",
     products: products,
     filterStatus: filterStatus,
-    keyword: keyword,
+    keyword: objectSearch.keyword,
   });
 };
