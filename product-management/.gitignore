@@ -3,3 +3,7 @@
 
 #misc
 .env
+
+#package json
+package-lok.json
+package.json
