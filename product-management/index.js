@@ -3,6 +3,10 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT;
 
+// Method override
+const methodOverride = require("method-override");
+app.use(methodOverride('_method'))
+
 // Routes
 const routeAdmin = require("./routes/admin/index.route");
 const route = require("./routes/client/index.route");
