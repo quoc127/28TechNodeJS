@@ -53,7 +53,7 @@ module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
-  await Product.updateOne({_id: id,}, {status: status});
+  await Product.updateOne({ _id: id, }, { status: status });
   res.redirect("back");
 };
 
@@ -61,19 +61,25 @@ module.exports.changeStatus = async (req, res) => {
 module.exports.changeMultiStatus = async (req, res) => {
   const type = req.body.type;
   const ids = req.body.ids.split(", ");
-  
+
   switch (type) {
     case "active":
       await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
       break;
-
     case "inactive":
-      await Product.updateMany({ _id: { $in: ids }}, { status: "inactive" });
+      await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" });
       break;
-  
     default:
       break;
   }
 
+  res.redirect("back");
+};
+
+// [DELETE] /admin/products/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+
+  await Product.deleteOne({ _id: id, });
   res.redirect("back");
 };
