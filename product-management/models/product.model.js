@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
   stock: Number,
   thumbnail: String,
   status: String,
-  position: String,
+  position: Number,
   slug: { 
     type: String, 
     slug: "title",
