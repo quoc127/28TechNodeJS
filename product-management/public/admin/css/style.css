@@ -108,4 +108,8 @@
 .image-preview[src=""] {
   display: none;
 }
+
+.hidden{
+  display: none;
+}
 /* End Image Preview */

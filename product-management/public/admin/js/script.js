@@ -96,7 +96,7 @@ if (formChangeMulti) {
 
     if (typeChange == "delete-all") {
       const isConfirm = confirm("Bạn chắc chắn muốn những xóa sản phẩm này!")
-      
+
       if (!isConfirm) {
         return;
       }
@@ -120,7 +120,7 @@ if (formChangeMulti) {
       formChangeMulti.submit();
     } else {
       alert("Vui lòng chọn một bản ghi");
-    }  
+    }
   });
 }
 // End Form Change Multi
@@ -146,17 +146,40 @@ const uploadImage = document.querySelector("[upload-image]");
 if (uploadImage) {
   const uploadImageInput = document.querySelector("[upload-image-input]");
   const uploadImagePreview = document.querySelector("[upload-image-preview]");
-
   uploadImageInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
       uploadImagePreview.src = URL.createObjectURL(file);
     }
+    updateRemoveButtonVisibility();
   });
 }
 // End Upload Image
 
 // Remove Image
-
+const removeImage = document.querySelector(".remove-image");
+if (removeImage) {
+  const uploadImageInput = document.querySelector("[upload-image-input]");
+  const srcImagePreview = document.querySelector("[upload-image-preview]");
+  removeImage.addEventListener("click", () => {
+    uploadImageInput.value = "";
+    srcImagePreview.src = ""
+    updateRemoveButtonVisibility();
+  });
+}
 // End Remove Image
 
+// Function to check and update button remove image
+function updateRemoveButtonVisibility() {
+  const uploadImageInput = document.querySelector("[upload-image-input]");
+  const buttonRemoveImg = document.querySelector(".remove-image");
+
+  if (uploadImageInput.value == "") {
+    buttonRemoveImg.classList.add("hidden");
+  } else {
+    buttonRemoveImg.classList.remove("hidden");
+  }
+}
+
+// Initial check when the page loads
+document.addEventListener("DOMContentLoaded", updateRemoveButtonVisibility);
