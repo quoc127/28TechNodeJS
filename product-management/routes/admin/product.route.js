@@ -14,5 +14,6 @@ router.patch("/change-multi", controller.changeMultiStatus);
 router.delete("/delete/:id", controller.deleteItem);
 router.get("/create", controller.create);
 router.post("/create", upload.single("thumbnail"), validate.createPost, controller.createPost);
+router.get("/edit/:id", controller.edit);
 
 module.exports = router;

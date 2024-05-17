@@ -91,7 +91,10 @@ block main
                     button-change-status
                   ) Dừng hoạt động
               td 
-                button(class="btn btn-warning btn-sm" style="margin-right: 5px") Sửa
+                a(
+                  href=`${prefixAdmin}/products/edit/${item.id}`
+                  class="btn btn-warning btn-sm" style="margin-right: 5px"
+                  ) Sửa
                 button(
                   class="btn btn-danger btn-sm"
                   button-delete

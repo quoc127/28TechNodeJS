@@ -143,3 +143,17 @@ module.exports.createPost = async (req, res) => {
   
   res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
+
+// [GET] /admin/products/edit/:id
+module.exports.edit = async (req, res) => {
+  const find = {
+    deleted: false,
+    _id: req.params.id
+  }
+  const product = await Product.findOne(find);
+  console.log(product);
+  res.render("admin/pages/products/edit.pug", {
+    pageTitle: "Chỉnh sửa sản phẩm",
+    product: product,
+  });
+};
