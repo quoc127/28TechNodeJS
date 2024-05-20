@@ -1,11 +1,12 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 block main 
-  +alert-error(5000)
+  +alert-success()
+  +alert-error()
 
   h1(class="mb-4") Chỉnh sửa sản phẩm
   form(
-    action=`${prefixAdmin}/products/create/:id`
+    action=`${prefixAdmin}/products/edit/${product.id}?_method=PATCH`
     id="form-edit-product"
     method="POST"
     enctype="multipart/form-data"
@@ -31,7 +32,6 @@ block main
     div(class="form-group")
       label(for="price") Giá
       input(
-        type="number"
         class="form-control"
         id="price"
         name="price"
@@ -41,7 +41,6 @@ block main
     div(class="form-group")
       label(for="discount") Giảm giá
       input(
-        type="number"
         class="form-control"
         id="discount"
         name="discountPercentage"
@@ -51,7 +50,6 @@ block main
     div(class="form-group")
       label(for="stock") Số lượng
       input(
-        type="number"
         class="form-control"
         id="stock"
         name="stock"
@@ -81,7 +79,6 @@ block main
     div(class="form-group")
       label(for="position") Vị trí
       input(
-        type="number"
         class="form-control"
         id="position"
         name="position"
