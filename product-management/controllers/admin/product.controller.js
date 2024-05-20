@@ -42,7 +42,7 @@ module.exports.index = async (req, res) => {
     .skip(objectPagination.skip);
 
   res.render("admin/pages/products/index.pug", {
-    pageTitle: "danh sách sản phẩm",
+    pageTitle: "Danh sách sản phẩm",
     products: products,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,

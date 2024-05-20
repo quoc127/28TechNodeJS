@@ -1,3 +1,12 @@
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 /* Header */
 .header {
   border-bottom: 1px solid #ddd;
@@ -9,7 +18,7 @@
   max-width: 100%;
 }
 
-.header .inner-menu > ul {
+.header .inner-menu>ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -19,9 +28,10 @@
   flex-wrap: wrap;
 }
 
-.header .inner-menu > ul > li {
+.header .inner-menu>ul>li {
   margin-left: 20px;
 }
+
 /* End Header */
 
 /* Footer */
@@ -31,6 +41,7 @@
   text-align: center;
   padding: 10px;
 }
+
 /* End Footer */
 
 /* box-head */
@@ -44,6 +55,7 @@
   font-weight: 600;
   color: green;
 }
+
 /* End box-head */
 
 /* product-item */
@@ -104,4 +116,5 @@
   -ms-border-radius: 8px;
   -o-border-radius: 8px;
 }
+
 /* End product-item */
