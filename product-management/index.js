@@ -20,8 +20,6 @@ database.connect();
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
-console.log(__dirname);
-
 // use files in public folder
 app.use(express.static(`${__dirname}/public`));
 
