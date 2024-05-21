@@ -17,11 +17,13 @@ const database = require("./config/database.js");
 database.connect();
 
 // Pug engine
-app.set("views", "./views");
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
+console.log(__dirname);
+
 // use files in public folder
-app.use(express.static("public"));
+app.use(express.static(`${__dirname}/public`));
 
 // App Locals Variables
 const systemConfig = require("./config/system.js");
