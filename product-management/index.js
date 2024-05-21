@@ -1,8 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const app = express();
-const port = process.env.PORT;
-require("dotenv").config();
+const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
 const cookieParser = require('cookie-parser');
@@ -15,12 +14,6 @@ app.use(methodOverride('_method'))
 // Database
 const database = require("./config/database.js");
 database.connect();
-
-// Routes
-const routeAdmin = require("./routes/admin/index.route");
-const route = require("./routes/client/index.route");
-route(app);
-routeAdmin(app);
 
 // Pug engine
 app.set("views", `${__dirname}/views`);
@@ -39,12 +32,27 @@ app.use(bodyParser.json());
 // Support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Express Flash
+// Cookie Parser
 app.use(cookieParser('sfsdfSFS123'));
-app.use(session({ cookie: { maxAge: 60000 }}));
+
+// Express Session
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 60000 } // Thời gian tồn tại của cookie (60 giây)
+}));
+
+// Express Flash
 app.use(flash());
 
+// Routes
+const routeAdmin = require("./routes/admin/index.route");
+const route = require("./routes/client/index.route");
+route(app);
+routeAdmin(app);
 
+// Start server
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
