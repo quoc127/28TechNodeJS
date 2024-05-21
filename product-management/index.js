@@ -16,6 +16,12 @@ app.use(methodOverride('_method'))
 const database = require("./config/database.js");
 database.connect();
 
+// Routes
+const routeAdmin = require("./routes/admin/index.route");
+const route = require("./routes/client/index.route");
+route(app);
+routeAdmin(app);
+
 // Pug engine
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
@@ -38,11 +44,6 @@ app.use(cookieParser('sfsdfSFS123'));
 app.use(session({ cookie: { maxAge: 60000 }}));
 app.use(flash());
 
-// Routes
-const routeAdmin = require("./routes/admin/index.route");
-const route = require("./routes/client/index.route");
-route(app);
-routeAdmin(app);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
