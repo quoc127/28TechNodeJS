@@ -90,12 +90,14 @@ if (formChangeMulti) {
     e.preventDefault();
 
     const checkboxMulti = document.querySelector("[checkbox-multi]");
-    const inputsChecked = checkboxMulti.querySelectorAll("input[name='id']:checked");
+    const inputsChecked = checkboxMulti.querySelectorAll(
+      "input[name='id']:checked"
+    );
 
     const typeChange = e.target.elements.type.value;
 
     if (typeChange == "delete-all") {
-      const isConfirm = confirm("Bạn chắc chắn muốn những xóa sản phẩm này!")
+      const isConfirm = confirm("Bạn chắc chắn muốn những xóa sản phẩm này!");
 
       if (!isConfirm) {
         return;
@@ -109,7 +111,9 @@ if (formChangeMulti) {
       inputsChecked.forEach((input) => {
         const id = input.value;
         if (typeChange == "change-position") {
-          const position = input.closest("tr").querySelector("input[name='position']").value;
+          const position = input
+            .closest("tr")
+            .querySelector("input[name='position']").value;
           ids.push(`${id}-${position}`);
         } else {
           ids.push(id);
@@ -163,7 +167,7 @@ if (removeImage) {
   const srcImagePreview = document.querySelector("[upload-image-preview]");
   removeImage.addEventListener("click", () => {
     uploadImageInput.value = "";
-    srcImagePreview.src = ""
+    srcImagePreview.src = "";
     updateRemoveButtonVisibility();
   });
 }
@@ -183,3 +187,43 @@ function updateRemoveButtonVisibility() {
 
 // Initial check when the page loads
 document.addEventListener("DOMContentLoaded", updateRemoveButtonVisibility);
+
+// Sort
+const sort = document.querySelector("[sort]");
+if (sort) {
+  let url = new URL(window.location.href);
+
+  const sortSelect = document.querySelector("[sort-select]");
+  const sortClear = document.querySelector("[sort-clear]");
+
+  sortSelect.addEventListener("change", (e) => {
+    const value = e.target.value;
+    const [sortKey, sortValue] = value.split("-");
+
+    url.searchParams.set("sortKey", sortKey);
+    url.searchParams.set("sortValue", sortValue);
+
+    window.location.href = url.href;
+  });
+
+  // Clear
+  sortClear.addEventListener("click", () => {
+    url.searchParams.delete("sortKey");
+    url.searchParams.delete("sortValue");
+
+    window.location.href = url.href;
+  });
+
+  // Add selected for option
+  const sortKey = url.searchParams.get("sortKey");
+  const sortValue = url.searchParams.get("sortValue");
+
+  if (sortKey && sortValue) {
+    const stringSort = `${sortKey}-${sortValue}`;
+    const optionSelected = sortSelect.querySelector(
+      `option[value='${stringSort}']`
+    );
+    optionSelected.selected = true;
+  }
+}
+// End Sort

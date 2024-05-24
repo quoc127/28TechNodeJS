@@ -36,8 +36,18 @@ module.exports.index = async (req, res) => {
     countProduct
   );
   // End Pagination
+
+  // Sort
+  let sort = {};
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[req.query.sortKey] = req.query.sortValue;
+  } else {
+    sort.position = "desc";
+  }
+  // End Sort
+
   const products = await Product.find(find)
-    .sort({ position: "desc" })
+    .sort(sort)
     .limit(objectPagination.limitItem)
     .skip(objectPagination.skip);
 
@@ -55,8 +65,8 @@ module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
-  await Product.updateOne({ _id: id, }, { status: status });
-  req.flash('success', 'Cập nhật trạng thái thành công!');
+  await Product.updateOne({ _id: id }, { status: status });
+  req.flash("success", "Cập nhật trạng thái thành công!");
   res.redirect("back");
 };
 
@@ -70,28 +80,46 @@ module.exports.changeMultiStatus = async (req, res) => {
       case "active":
         try {
           await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
-          req.flash('success', `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`);
+          req.flash(
+            "success",
+            `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`
+          );
         } catch (error) {
           console.error(error);
-          req.flash('error', 'Đã xảy ra lỗi trong quá trình cập nhật trạng thái active.');
+          req.flash(
+            "error",
+            "Đã xảy ra lỗi trong quá trình cập nhật trạng thái active."
+          );
         }
         break;
       case "inactive":
         try {
-          await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" });
-          req.flash('success', `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`);
+          await Product.updateMany(
+            { _id: { $in: ids } },
+            { status: "inactive" }
+          );
+          req.flash(
+            "success",
+            `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`
+          );
         } catch (error) {
           console.error(error);
-          req.flash('error', 'Đã xảy ra lỗi trong quá trình cập nhật trạng thái inactive.');
+          req.flash(
+            "error",
+            "Đã xảy ra lỗi trong quá trình cập nhật trạng thái inactive."
+          );
         }
         break;
       case "delete-all":
         try {
-          await Product.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date() });
-          req.flash('success', `Xóa thành công ${ids.length} sản phẩm!`);
+          await Product.updateMany(
+            { _id: { $in: ids } },
+            { deleted: true, deletedAt: new Date() }
+          );
+          req.flash("success", `Xóa thành công ${ids.length} sản phẩm!`);
         } catch (error) {
           console.error(error);
-          req.flash('error', 'Đã xảy ra lỗi trong quá trình xóa sản phẩm.');
+          req.flash("error", "Đã xảy ra lỗi trong quá trình xóa sản phẩm.");
         }
         break;
       case "change-position":
@@ -101,19 +129,25 @@ module.exports.changeMultiStatus = async (req, res) => {
             position = parseInt(position);
             await Product.updateOne({ _id: id }, { position: position });
           }
-          req.flash('success', `Đã đổi vị trí thành công ${ids.length} sản phẩm!`);
+          req.flash(
+            "success",
+            `Đã đổi vị trí thành công ${ids.length} sản phẩm!`
+          );
         } catch (error) {
           console.error(error);
-          req.flash('error', 'Đã xảy ra lỗi trong quá trình thay đổi vị trí sản phẩm.');
+          req.flash(
+            "error",
+            "Đã xảy ra lỗi trong quá trình thay đổi vị trí sản phẩm."
+          );
         }
         break;
       default:
-        req.flash('error', 'Loại thao tác không hợp lệ!');
+        req.flash("error", "Loại thao tác không hợp lệ!");
         break;
     }
   } catch (error) {
     console.error(error);
-    req.flash('error', 'Đã xảy ra lỗi không xác định.');
+    req.flash("error", "Đã xảy ra lỗi không xác định.");
   }
 
   res.redirect("back");
@@ -125,16 +159,19 @@ module.exports.deleteItem = async (req, res) => {
 
   // await Product.deleteOne({ _id: id, });
   try {
-    await Product.updateOne({ _id: id, }, {
-      deleted: true,
-      deletedAt: new Date()
-    });
-    req.flash('success', "Xóa thành công sản phẩm!");
+    await Product.updateOne(
+      { _id: id },
+      {
+        deleted: true,
+        deletedAt: new Date(),
+      }
+    );
+    req.flash("success", "Xóa thành công sản phẩm!");
   } catch (error) {
     console.error(error);
-    req.flash('error', "Xóa sản phẩm thất bại!");
+    req.flash("error", "Xóa sản phẩm thất bại!");
   }
-  
+
   res.redirect("back");
 };
 
@@ -147,7 +184,6 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products/create
 module.exports.createPost = async (req, res) => {
-
   req.body.price = parseFloat(req.body.price);
   req.body.discountPercentage = parseFloat(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
@@ -159,10 +195,10 @@ module.exports.createPost = async (req, res) => {
     } else {
       req.body.position = parseInt(req.body.position);
     }
-  
+
     const product = new Product(req.body);
     await product.save();
-    
+
     req.flash("success", "Tạo sản phẩm thành công!");
     res.redirect(`${systemConfig.prefixAdmin}/products`);
   } catch (error) {
@@ -177,8 +213,8 @@ module.exports.edit = async (req, res) => {
   try {
     const find = {
       deleted: false,
-      _id: req.params.id
-    }
+      _id: req.params.id,
+    };
     const product = await Product.findOne(find);
     res.render("admin/pages/products/edit.pug", {
       pageTitle: "Chỉnh sửa sản phẩm",
@@ -186,31 +222,31 @@ module.exports.edit = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.redirect(`${systemConfig.prefixAdmin}/products4`)
+    res.redirect(`${systemConfig.prefixAdmin}/products4`);
   }
 };
 
 // [PATCH] /admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
-  const id = req.params.id
+  const id = req.params.id;
 
   req.body.price = parseFloat(req.body.price);
   req.body.discountPercentage = parseFloat(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
   req.body.position = parseInt(req.body.position);
 
-  if (req.file) { 
+  if (req.file) {
     req.body.thumbnail = `/uploads/${req.file.filename}`;
   }
 
   try {
-    await Product.updateOne({_id: id}, req.body);
+    await Product.updateOne({ _id: id }, req.body);
     req.flash("success", "Cập nhật thành công!");
   } catch (error) {
     console.error(error);
     req.flash("error", "Cập nhật thất bại!");
   }
-  
+
   res.redirect("back");
 };
 
@@ -219,8 +255,8 @@ module.exports.detail = async (req, res) => {
   try {
     const find = {
       deleted: false,
-      _id: req.params.id
-    }
+      _id: req.params.id,
+    };
     const product = await Product.findOne(find);
     res.render("admin/pages/products/detail.pug", {
       pageTitle: product.title,
@@ -228,6 +264,6 @@ module.exports.detail = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.redirect(`${systemConfig.prefixAdmin}/products`)
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
 };
