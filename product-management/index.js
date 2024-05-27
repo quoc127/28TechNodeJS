@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 3000;
@@ -51,6 +52,10 @@ const routeAdmin = require("./routes/admin/index.route");
 const route = require("./routes/client/index.route");
 route(app);
 routeAdmin(app);
+
+// TinyMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+// End TinyMCE
 
 // Start server
 app.listen(port, () => {
