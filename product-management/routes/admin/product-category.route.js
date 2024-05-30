@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const controller = require("../../controllers/admin/product-category.controller");
 const validate = require("../../validates/admin/product-category.validate");
-const uplodaCloud = require("../../middlewares/admin/uploadCould.middleware")
+const uplodaCloud = require("../../middlewares/admin/uploadCould.middleware");
 
 const upload = multer();
 
@@ -16,6 +16,17 @@ router.post(
   upload.single("thumbnail"),
   uplodaCloud.upload,
   validate.createPost,
-  controller.createPost);
+  controller.createPost
+);
+
+router.get("/edit/:id", controller.edit);
+
+router.patch(
+  "/edit/:id",
+  upload.single("thumbnail"),
+  uplodaCloud.upload,
+  validate.createPost,
+  controller.editPatch
+);
 
 module.exports = router;

@@ -222,7 +222,7 @@ module.exports.edit = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.redirect(`${systemConfig.prefixAdmin}/products4`);
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
 };
 
