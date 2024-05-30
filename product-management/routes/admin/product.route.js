@@ -5,6 +5,7 @@ const upload = multer();
 const controller = require("../../controllers/admin/product.controller");
 const validate = require("../../validates/admin/product.validate");
 const uplodaCloud = require("../../middlewares/admin/uploadCould.middleware")
+
 router.get("/", controller.index);
 
 router.patch("/change-status/:status/:id", controller.changeStatus);

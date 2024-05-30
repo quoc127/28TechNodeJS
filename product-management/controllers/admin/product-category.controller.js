@@ -5,18 +5,20 @@ const createTreeHelper = require("../../helpers/createTree");
 
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
-  const find = {
-    deleted: false,
-  };
+  try {
+    const find = {
+      deleted: false,
+    };
+    const records = await ProductCategory.find(find);
+    const newRecords = createTreeHelper.tree(records);
 
-  const records = await ProductCategory.find(find);
-
-  const newRecords = createTreeHelper.tree(records);
-
-  res.render("admin/pages/products-category/index.pug", {
-    pageTitle: "Danh mục sản phẩm",
-    records: newRecords,
-  });
+    res.render("admin/pages/products-category/index.pug", {
+      pageTitle: "Danh mục sản phẩm",
+      records: newRecords,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // [GET] /admin/products-category/create
@@ -37,15 +39,22 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products-category/create
 module.exports.createPost = async (req, res) => {
-  if (req.body.position == "") {
-    const countProductsCategory = await ProductCategory.countDocuments();
-    req.body.position = countProductsCategory + 1;
-  } else {
-    req.body.position = parseInt(req.body.position);
-  }
+  try {
+    if (req.body.position == "") {
+      const countProductsCategory = await ProductCategory.countDocuments();
+      req.body.position = countProductsCategory + 1;
+    } else {
+      req.body.position = parseInt(req.body.position);
+    }
 
-  const record = new ProductCategory(req.body);
-  await record.save();
+    const record = new ProductCategory(req.body);
+    await record.save();
+
+    req.flash("success", "Tạo danh mục thành công!");
+  } catch (error) {
+    console.log(error);
+    req.flash("error", "Tạo danh mục thất bại!");
+  }
 
   res.redirect(`${systemConfig.prefixAdmin}/products-category`);
 };
@@ -54,17 +63,13 @@ module.exports.createPost = async (req, res) => {
 module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
-
     const data = await ProductCategory.findOne({
       _id: id,
       deleted: false,
     });
-
     const records = await ProductCategory.find({
       deleted: false,
     });
-
-    console.log(records);
     const newRecords = createTreeHelper.tree(records);
 
     res.render("admin/pages/products-category/edit.pug", {
@@ -73,17 +78,23 @@ module.exports.edit = async (req, res) => {
       records: newRecords,
     });
   } catch (error) {
-    res.redirect(`${systemConfig.prefixAdmin}/products-category`)
+    res.redirect(`${systemConfig.prefixAdmin}/products-category`);
     console.log(error);
   }
 };
 
 // [PATCH] /admin/products-category/edit/:id
 module.exports.editPatch = async (req, res) => {
-  const id = req.params.id;
-  req.body.position = parseInt(req.body.position);
+  try {
+    const id = req.params.id;
+    req.body.position = parseInt(req.body.position);
 
-  await ProductCategory.updateOne({ _id: id }, req.body);
+    await ProductCategory.updateOne({ _id: id }, req.body);
 
-  res.redirect("back");
+    req.flash("success", "Chỉnh sửa danh mục thành công!");
+    res.redirect("back");
+  } catch (error) {
+    console.log(error);
+    req.flash("error", "Tạo danh mục thất bại!");
+  }
 };
