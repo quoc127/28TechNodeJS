@@ -108,3 +108,40 @@ module.exports.editPatch = async (req, res) => {
     req.flash("error", "Tạo danh mục thất bại!");
   }
 };
+
+// [GET] /admin/products-category/detail/:id
+module.exports.detail = async (req, res) => {
+  const find = {
+    deleted: false,
+    _id: req.params.id,
+  };
+  const data = await ProductCategory.findOne(find);
+  console.log(data);
+
+  res.render("admin/pages/products-category/detail.pug", {
+    pageTitle: data.title,
+    data: data,
+  });
+};
+
+// [DELETE] /admin/products-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+
+  // await Product.deleteOne({ _id: id, });
+  try {
+    await ProductCategory.updateOne(
+      { _id: id },
+      {
+        deleted: true,
+        deletedAt: new Date(),
+      }
+    );
+    req.flash("success", "Xóa thành công sản phẩm!");
+  } catch (error) {
+    console.error(error);
+    req.flash("error", "Xóa sản phẩm thất bại!");
+  }
+
+  res.redirect("back");
+};
