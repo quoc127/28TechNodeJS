@@ -146,10 +146,101 @@ module.exports.deleteItem = async (req, res) => {
 
 // [PATCH] /admin/products-category/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
-  const status = req.params.status;
-  const id = req.params.id;
+  try {
+    const status = req.params.status;
+    const id = req.params.id;
 
-  await ProductCategory.updateOne({ _id: id }, { status: status });
-  req.flash("success", "Cập nhật trạng thái thành công!");
+    await ProductCategory.updateOne({ _id: id }, { status: status });
+    req.flash("success", "Cập nhật trạng thái thành công!");
+  } catch (error) {
+    console.log(error);
+    req.flash("error", "Cập nhật trạng thái thất bại!");
+  }
+
+  res.redirect("back");
+};
+
+// [PATCH] /admin/products-category/change-multi
+module.exports.changeMultiStatus = async (req, res) => {
+  const type = req.body.type;
+  console.log(req.body);
+  console.log(req.body.type);
+  const ids = req.body.ids.split(", ");
+
+  try {
+    switch (type) {
+      case "active":
+        try {
+          await ProductCategory.updateMany({ _id: { $in: ids } }, { status: "active" });
+          req.flash(
+            "success",
+            `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`
+          );
+        } catch (error) {
+          console.error(error);
+          req.flash(
+            "error",
+            "Đã xảy ra lỗi trong quá trình cập nhật trạng thái active."
+          );
+        }
+        break;
+      case "inactive":
+        try {
+          await ProductCategory.updateMany(
+            { _id: { $in: ids } },
+            { status: "inactive" }
+          );
+          req.flash(
+            "success",
+            `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`
+          );
+        } catch (error) {
+          console.error(error);
+          req.flash(
+            "error",
+            "Đã xảy ra lỗi trong quá trình cập nhật trạng thái inactive."
+          );
+        }
+        break;
+      case "delete-all":
+        try {
+          await ProductCategory.updateMany(
+            { _id: { $in: ids } },
+            { deleted: true, deletedAt: new Date() }
+          );
+          req.flash("success", `Xóa thành công ${ids.length} sản phẩm!`);
+        } catch (error) {
+          console.error(error);
+          req.flash("error", "Đã xảy ra lỗi trong quá trình xóa sản phẩm.");
+        }
+        break;
+      case "change-position":
+        try {
+          for (const item of ids) {
+            let [id, position] = item.split("-");
+            position = parseInt(position);
+            await ProductCategory.updateOne({ _id: id }, { position: position });
+          }
+          req.flash(
+            "success",
+            `Đã đổi vị trí thành công ${ids.length} sản phẩm!`
+          );
+        } catch (error) {
+          console.error(error);
+          req.flash(
+            "error",
+            "Đã xảy ra lỗi trong quá trình thay đổi vị trí sản phẩm."
+          );
+        }
+        break;
+      default:
+        req.flash("error", "Loại thao tác không hợp lệ!");
+        break;
+    }
+  } catch (error) {
+    console.error(error);
+    req.flash("error", "Đã xảy ra lỗi không xác định.");
+  }
+
   res.redirect("back");
 };
