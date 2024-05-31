@@ -15,11 +15,10 @@ module.exports.index = async (req, res) => {
     if (objectSearch.regex) {
       find.title = objectSearch.regex;
     }
-    console.log(find);
     const data = await ProductCategory.find(find);
     const records = await ProductCategory.find(find);
     const newRecords = createTreeHelper.tree(records);
-    console.log("newRecords", newRecords);
+
 
     res.render("admin/pages/products-category/index.pug", {
       pageTitle: "Danh mục sản phẩm",
@@ -116,7 +115,6 @@ module.exports.detail = async (req, res) => {
     _id: req.params.id,
   };
   const data = await ProductCategory.findOne(find);
-  console.log(data);
 
   res.render("admin/pages/products-category/detail.pug", {
     pageTitle: data.title,
@@ -143,5 +141,15 @@ module.exports.deleteItem = async (req, res) => {
     req.flash("error", "Xóa sản phẩm thất bại!");
   }
 
+  res.redirect("back");
+};
+
+// [PATCH] /admin/products-category/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+  const status = req.params.status;
+  const id = req.params.id;
+
+  await ProductCategory.updateOne({ _id: id }, { status: status });
+  req.flash("success", "Cập nhật trạng thái thành công!");
   res.redirect("back");
 };
