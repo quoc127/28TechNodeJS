@@ -3,7 +3,6 @@ const systemConfig = require("../../config/system");
 const createTreeHelper = require("../../helpers/createTree");
 const searchrStatusHelper = require("../../helpers/search");
 
-
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
   try {
@@ -18,7 +17,6 @@ module.exports.index = async (req, res) => {
     const data = await ProductCategory.find(find);
     const records = await ProductCategory.find(find);
     const newRecords = createTreeHelper.tree(records);
-
 
     res.render("admin/pages/products-category/index.pug", {
       pageTitle: "Danh mục sản phẩm",
@@ -125,17 +123,26 @@ module.exports.detail = async (req, res) => {
 // [DELETE] /admin/products-category/delete/:id
 module.exports.deleteItem = async (req, res) => {
   const id = req.params.id;
-
-  // await Product.deleteOne({ _id: id, });
+  const childrenCategories = await ProductCategory.find({ parent_id: id });
+  const titles = childrenCategories.map(
+    (childrenCategories) => childrenCategories.title
+  );
+  const joinedTitles = titles.join(", ");
   try {
-    await ProductCategory.updateOne(
-      { _id: id },
-      {
-        deleted: true,
-        deletedAt: new Date(),
-      }
-    );
-    req.flash("success", "Xóa thành công sản phẩm!");
+    if (childrenCategories.length > 0) {
+      req.flash(
+        "error",
+        "Phải xóa danh mục con trước khi xóa danh mục cha: " + joinedTitles
+      );
+    } else {
+      await ProductCategory.updateOne(
+        { _id: id },
+        {
+          deleted: true,
+          deletedAt: new Date(),
+        }
+      );
+    }
   } catch (error) {
     console.error(error);
     req.flash("error", "Xóa sản phẩm thất bại!");
@@ -171,7 +178,10 @@ module.exports.changeMultiStatus = async (req, res) => {
     switch (type) {
       case "active":
         try {
-          await ProductCategory.updateMany({ _id: { $in: ids } }, { status: "active" });
+          await ProductCategory.updateMany(
+            { _id: { $in: ids } },
+            { status: "active" }
+          );
           req.flash(
             "success",
             `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`
@@ -219,7 +229,10 @@ module.exports.changeMultiStatus = async (req, res) => {
           for (const item of ids) {
             let [id, position] = item.split("-");
             position = parseInt(position);
-            await ProductCategory.updateOne({ _id: id }, { position: position });
+            await ProductCategory.updateOne(
+              { _id: id },
+              { position: position }
+            );
           }
           req.flash(
             "success",
