@@ -9,44 +9,46 @@ block main
   +alert-success(3000)
   +alert-error(3000)
   
-  h1 Danh mục sản phẩm
+  if(role.permissions.includes("products-category_view"))
+    h1 Danh mục sản phẩm
 
-  .card.mb-3 
-    .card-header Bộ lọc và tìm kiếm 
-    .card-body 
-      .row
-        .col-6
-          +search(keyword)
-
-  .card.mb-3 
-    .card-header Danh mục
-      .card-body
+    .card.mb-3 
+      .card-header Bộ lọc và tìm kiếm 
+      .card-body 
         .row
-          .col-8  
-            +form-change-multi(`${prefixAdmin}/products-category/change-multi?_method=PATCH`)
-          .col-4 
-            a(
-              href=`${prefixAdmin}/products-category/create`
-              class="btn btn-outline-success"
-            ) + Thêm mới
+          .col-6
+            +search(keyword)
 
-      table(
-        class="table table-hover table-sm"
-        checkbox-multi
-      ) 
-        thead 
-          tr
-            th 
-              input(type="checkbox" name="checkall")
-            th STT
-            th Hình ảnh
-            th Tiêu đề
-            th Vị trí
-            th Trạng thái
-            th Hành động
+    .card.mb-3 
+      .card-header Danh mục
+        .card-body
+          .row
+            .col-8  
+              +form-change-multi(`${prefixAdmin}/products-category/change-multi?_method=PATCH`)
+            .col-4 
+              if(role.permissions.includes("products-category_create"))
+                a(
+                  href=`${prefixAdmin}/products-category/create`
+                  class="btn btn-outline-success"
+                ) + Thêm mới
 
-        tbody 
-          +table-tree(records)
+        table(
+          class="table table-hover table-sm"
+          checkbox-multi
+        ) 
+          thead 
+            tr
+              th 
+                input(type="checkbox" name="checkall")
+              th STT
+              th Hình ảnh
+              th Tiêu đề
+              th Vị trí
+              th Trạng thái
+              th Hành động
+
+          tbody 
+            +table-tree(records)
 
   form(
     action=""
