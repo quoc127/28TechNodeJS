@@ -1,5 +1,6 @@
 const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 
 const systemConfig = require("../../config/system");
 
@@ -52,6 +53,16 @@ module.exports.index = async (req, res) => {
     .sort(sort)
     .limit(objectPagination.limitItem)
     .skip(objectPagination.skip);
+
+  for (const product of products) {
+    const user = await Account.findOne({
+      _id: product.createdBy.account_id,
+    });
+
+    if (user) {
+      product.accountFullName = user.fullName;
+    }
+  }
 
   res.render("admin/pages/products/index.pug", {
     pageTitle: "Danh sách sản phẩm",
@@ -116,7 +127,13 @@ module.exports.changeMultiStatus = async (req, res) => {
         try {
           await Product.updateMany(
             { _id: { $in: ids } },
-            { deleted: true, deletedAt: new Date() }
+            {
+              deleted: true,
+              deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date(),
+              },
+            }
           );
           req.flash("success", `Xóa thành công ${ids.length} sản phẩm!`);
         } catch (error) {
@@ -156,7 +173,7 @@ module.exports.changeMultiStatus = async (req, res) => {
 };
 
 // [DELETE] /admin/products/delete/:id
-module.exports. deleteItem = async (req, res) => {
+module.exports.deleteItem = async (req, res) => {
   const id = req.params.id;
 
   // await Product.deleteOne({ _id: id, });
@@ -165,7 +182,10 @@ module.exports. deleteItem = async (req, res) => {
       { _id: id },
       {
         deleted: true,
-        deletedAt: new Date(),
+        deletedBy: {
+          account_id: res.locals.user.id,
+          deletedAt: new Date(),
+        },
       }
     );
     req.flash("success", "Xóa thành công sản phẩm!");
@@ -181,15 +201,15 @@ module.exports. deleteItem = async (req, res) => {
 module.exports.create = async (req, res) => {
   let find = {
     deleted: false,
-  }
+  };
 
   const category = await ProductCategory.find(find);
 
-  const newCategory = createTreeHelper.tree(category)
+  const newCategory = createTreeHelper.tree(category);
 
   res.render("admin/pages/products/create.pug", {
     pageTitle: "Thêm mới sản phẩm",
-    category: newCategory
+    category: newCategory,
   });
 };
 
@@ -206,6 +226,8 @@ module.exports.createPost = async (req, res) => {
     } else {
       req.body.position = parseInt(req.body.position);
     }
+
+    req.body.createdBy = { account_id: res.locals.user.id };
 
     const product = new Product(req.body);
     await product.save();
@@ -228,10 +250,10 @@ module.exports.edit = async (req, res) => {
     };
     const product = await Product.findOne(find);
 
-    const category = await ProductCategory.find({deleted: false});
+    const category = await ProductCategory.find({ deleted: false });
 
-    const newCategory = createTreeHelper.tree(category)
-    
+    const newCategory = createTreeHelper.tree(category);
+
     res.render("admin/pages/products/edit.pug", {
       pageTitle: "Chỉnh sửa sản phẩm",
       product: product,

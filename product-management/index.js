@@ -1,16 +1,17 @@
 const express = require("express");
-const path = require('path');
+const path = require("path");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 3000;
-const bodyParser = require('body-parser');
-const flash = require('express-flash');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const bodyParser = require("body-parser");
+const flash = require("express-flash");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const moment = require("moment");
 
 // Method override
 const methodOverride = require("method-override");
-app.use(methodOverride('_method'))
+app.use(methodOverride("_method"));
 
 // Database
 const database = require("./config/database.js");
@@ -26,6 +27,7 @@ app.use(express.static(`${__dirname}/public`));
 // App Locals Variables
 const systemConfig = require("./config/system.js");
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+app.locals.moment = moment;
 
 // Support parsing of application/json type post data
 app.use(bodyParser.json());
@@ -34,15 +36,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Cookie Parser
-app.use(cookieParser('sfsdfSFS123'));
+app.use(cookieParser("sfsdfSFS123"));
 
 // Express Session
-app.use(session({
-  secret: 'your_secret_key',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 60000 } // Thời gian tồn tại của cookie (60 giây)
-}));
+app.use(
+  session({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }, // Thời gian tồn tại của cookie (60 giây)
+  })
+);
 
 // Express Flash
 app.use(flash());
@@ -54,7 +58,10 @@ route(app);
 routeAdmin(app);
 
 // TinyMCE
-app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
 // End TinyMCE
 
 // Start server
