@@ -4,7 +4,7 @@ const multer = require("multer");
 const upload = multer();
 const controller = require("../../controllers/admin/product.controller");
 const validate = require("../../validates/admin/product.validate");
-const uplodaCloud = require("../../middlewares/admin/uploadCould.middleware")
+const uplodaCloud = require("../../middlewares/admin/uploadCould.middleware");
 
 router.get("/", controller.index);
 
@@ -19,15 +19,17 @@ router.post(
   upload.single("thumbnail"),
   uplodaCloud.upload,
   validate.createPost,
-  controller.createPost);
+  controller.createPost
+);
 
 router.get("/edit/:id", controller.edit);
 router.patch(
-  "/edit/:id", 
-  upload.single("thumbnail"), 
+  "/edit/:id",
+  upload.single("thumbnail"),
   uplodaCloud.upload,
-  validate.createPost, 
-  controller.editPatch);
+  validate.createPost,
+  controller.editPatch
+);
 
 router.get("/detail/:id", controller.detail);
 
