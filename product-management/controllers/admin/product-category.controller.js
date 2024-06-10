@@ -47,20 +47,24 @@ module.exports.create = async (req, res) => {
 // [POST] /admin/products-category/create
 module.exports.createPost = async (req, res) => {
   try {
-    if (req.body.position == "") {
-      const countProductsCategory = await ProductCategory.countDocuments();
-      req.body.position = countProductsCategory + 1;
+    const permissions = res.locals.role.permissions;
+    if (permissions.includes("products-category_create")) {
+      if (req.body.position == "") {
+        const countProductsCategory = await ProductCategory.countDocuments();
+        req.body.position = countProductsCategory + 1;
+      } else {
+        req.body.position = parseInt(req.body.position);
+      }
+
+      const record = new ProductCategory(req.body);
+      await record.save();
+
+      req.flash("success", "Tạo danh mục thành công!");
     } else {
-      req.body.position = parseInt(req.body.position);
+      req.flash("error", "Tạo danh mục thất bại!");
     }
-
-    const record = new ProductCategory(req.body);
-    await record.save();
-
-    req.flash("success", "Tạo danh mục thành công!");
   } catch (error) {
     console.log(error);
-    req.flash("error", "Tạo danh mục thất bại!");
   }
 
   res.redirect(`${systemConfig.prefixAdmin}/products-category`);
