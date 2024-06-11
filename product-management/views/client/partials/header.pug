@@ -9,6 +9,7 @@ header.header
             img(src="/images/logo.svg", alt="logo")
       .col-5
         form(
+          id="form-search"
           action="/search"
           method="POST"
         )
@@ -16,7 +17,7 @@ header.header
             input(
               type="text"
               placeholder="Nhập từ khóa..."
-              class="form-controll"
+              class="form-control"
               name="keyword"
               value=keyword
             )
