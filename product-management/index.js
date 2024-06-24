@@ -8,13 +8,15 @@ const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const moment = require("moment");
-
-// Method override
+const database = require("./config/database.js");
+const systemConfig = require("./config/system.js");
 const methodOverride = require("method-override");
+const routeAdmin = require("./routes/admin/index.route");
+const route = require("./routes/client/index.route");
+// Method override
 app.use(methodOverride("_method"));
 
 // Database
-const database = require("./config/database.js");
 database.connect();
 
 // Pug engine
@@ -25,7 +27,6 @@ app.set("view engine", "pug");
 app.use(express.static(`${__dirname}/public`));
 
 // App Locals Variables
-const systemConfig = require("./config/system.js");
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 app.locals.moment = moment;
 
@@ -52,10 +53,13 @@ app.use(
 app.use(flash());
 
 // Routes
-const routeAdmin = require("./routes/admin/index.route");
-const route = require("./routes/client/index.route");
 route(app);
 routeAdmin(app);
+app.get("*", (req, res) => {
+  res.render("client/pages/errors/404",{
+    pageTitle: "404 Not Found",
+  });
+});
 
 // TinyMCE
 app.use(
