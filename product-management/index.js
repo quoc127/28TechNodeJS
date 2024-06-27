@@ -13,6 +13,9 @@ const systemConfig = require("./config/system.js");
 const methodOverride = require("method-override");
 const routeAdmin = require("./routes/admin/index.route");
 const route = require("./routes/client/index.route");
+const { Server } = require("socket.io");
+const http = require('http');
+
 // Method override
 app.use(methodOverride("_method"));
 
@@ -22,6 +25,13 @@ database.connect();
 // Pug engine
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
+
+// SocketIO
+const server = http.createServer(app);
+const io = new Server(server);
+io.on('connection', (socket) => {
+  console.log('a user connected', socket.id);
+});
 
 // use files in public folder
 app.use(express.static(`${__dirname}/public`));
@@ -69,6 +79,6 @@ app.use(
 // End TinyMCE
 
 // Start server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
