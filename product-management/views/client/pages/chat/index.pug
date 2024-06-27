@@ -1,0 +1,46 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.my-3 
+    .row-12 
+      .col-12 
+        +box-head("Chat")
+    
+    .row 
+      .col-12 
+        .chat 
+          .inner-body 
+            .inner-incoming 
+              .inner-name Em yêu 
+              .inner-content 
+                | Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus nihil qui ad, veniam consequuntur magni aut excepturi at voluptatibus quod in totam nostrum reprehenderit cumque quo, cum perferendis, fugiat officiis?
+            .inner-outgoing 
+              .inner-content 
+                | Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus nihil qui ad, veniam consequuntur magni aut excepturi at voluptatibus quod in totam nostrum reprehenderit cumque quo, cum perferendis, fugiat officiis?
+            .inner-incoming 
+              .inner-name Em yêu 
+              .inner-content 
+                | Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus nihil qui ad, veniam consequuntur magni aut excepturi at voluptatibus quod in totam nostrum reprehenderit cumque quo, cum perferendis, fugiat officiis?
+            .inner-outgoing 
+              .inner-content 
+                | Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus nihil qui ad, veniam consequuntur magni aut excepturi at voluptatibus quod in totam nostrum reprehenderit cumque quo, cum perferendis, fugiat officiis?
+            .inner-incoming 
+              .inner-name Em yêu 
+              .inner-content 
+                | Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus nihil qui ad, veniam consequuntur magni aut excepturi at voluptatibus quod in totam nostrum reprehenderit cumque quo, cum perferendis, fugiat officiis?
+          .inner-foot 
+            form(
+              class="inner-form"
+              action=""
+            )
+              input(
+                type="text"
+                placeholder="Nhập nội dung..."
+                name="content"
+              )
+              button
+                i.fa-solid.fa-paper-plane
+            
+  
+  
