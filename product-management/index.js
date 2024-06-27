@@ -29,9 +29,7 @@ app.set("view engine", "pug");
 // SocketIO
 const server = http.createServer(app);
 const io = new Server(server);
-io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
-});
+global._io = io;
 
 // use files in public folder
 app.use(express.static(`${__dirname}/public`));
