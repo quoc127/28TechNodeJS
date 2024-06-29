@@ -14,7 +14,7 @@ if (formSendData) {
 
 // SERVER RETURN MESSAGE
 socket.on("SERVER_RETURN_MESSAGE", (data) => {
-  const myId = document.querySelector("[my-id]").getAttribute("my-id")
+  const myId = document.querySelector("[my-id]").getAttribute("my-id");
   const body = document.querySelector(".chat .inner-body");
   const div = document.createElement("div");
   let htmlFullName = "";
@@ -23,12 +23,20 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
     div.classList.add("inner-outgoing");
   } else {
     div.classList.add("inner-incoming");
-    htmlFullName = `<div class="inner-name">${data.fullName}</div>`
+    htmlFullName = `<div class="inner-name">${data.fullName}</div>`;
   }
   div.innerHTML = `
     ${htmlFullName}
     <div class="inner-content">${data.content}</div>
   `;
   body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
 });
 // END SERVER RETURN MESSAGE
+
+// Scroll Chat To Bottoom
+const bodyChat = document.querySelector(".chat .inner-body");
+if (bodyChat) {
+  bodyChat.scrollTop = bodyChat.scrollHeight;
+}
+// End Scroll Chat To Bottoom
