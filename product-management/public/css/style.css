@@ -316,9 +316,14 @@ a:hover {
   -o-border-radius: 5px;
 }
 
+.chat .inner-body .inner-incoming .inner-images {
+  padding-top: 10px;
+}
+
 .chat .inner-outgoing{
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
   padding: 10px
 }
 
@@ -368,6 +373,30 @@ a:hover {
   padding: 0 10px;
   margin-left: 10px;
   cursor: pointer;
+}
+
+.chat .inner-body .inner-images img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  background: #efefef;
+  padding: 10px;
+  margin: 0 5px 5px 0;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.chat .inner-body .inner-outgoing .inner-images {
+  padding-top: 10px;
+  margin-left: auto;
+  text-align: right;
+}
+
+.chat .inner-body .inner-outgoing .inner-images img {
+  margin: 0 0 5px 5px;
 }
 /* End Chat */
 
