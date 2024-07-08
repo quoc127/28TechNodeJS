@@ -261,8 +261,8 @@ module.exports.createPost = async (req, res) => {
 
   try {
     if (req.body.position == "") {
-      const countProducts = await Product.countDocuments();
-      req.body.position = countProducts + 1;
+      const productPositon = await Product.findOne().sort({ position: -1 })
+      req.body.position = productPositon.position + 1;
     } else {
       req.body.position = parseInt(req.body.position);
     }
@@ -313,10 +313,6 @@ module.exports.editPatch = async (req, res) => {
   req.body.discountPercentage = parseFloat(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
   req.body.position = parseInt(req.body.position);
-
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
 
   try {
     const updatedBy = {
