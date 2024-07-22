@@ -5,10 +5,23 @@ if (listBtnAddFriend.length > 0) {
     button.addEventListener("click", () => {
       button.closest(".box-user").classList.add("add");
       const userId = button.getAttribute("btn-add-friend");
-      console.log(userId);
 
       socket.emit("CLINET_ADD_FRIEND", userId);
     });
   });
 }
-// End Send request add friend
+// End send request add friend
+
+// Cancel request add friend
+const listBtnCancelFriend = document.querySelectorAll("[btn-cancel-friend]");
+if (listBtnCancelFriend.length > 0) {
+  listBtnCancelFriend.forEach((button) => {
+    button.addEventListener("click", () => {
+      button.closest(".box-user").classList.remove("add");
+      const userId = button.getAttribute("btn-cancel-friend");
+
+      socket.emit("CLINET_CANCEL_FRIEND", userId);
+    });
+  });
+}
+// End cancel request add friend
