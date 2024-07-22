@@ -80,5 +80,44 @@ module.exports = async (res) => {
         );
       }
     });
+
+    // User refuse request add friend
+    socket.on("CLINET_REFUSE_FRIEND", async (userId) => {
+      const myUserId = res.locals.user.id;
+      
+      // Delete id "A" on acceptFriends "B"
+      const existUserAinB = await User.findOne({
+        _id: myUserId,
+        acceptFriends: userId,
+      });
+
+      if (existUserAinB) {
+        await User.updateOne(
+          {
+            _id: myUserId,
+          },
+          {
+            $pull: { acceptFriends: userId },
+          }
+        );
+      }
+
+      // Delete id "B" on requestFriends "A"
+      const existUserBinA = await User.findOne({
+        _id: userId,
+        requestFriends: myUserId,
+      });
+
+      if (existUserBinA) {
+        await User.updateOne(
+          {
+            _id: userId,
+          },
+          {
+            $pull: { requestFriends: myUserId },
+          }
+        );
+      }
+    });
   });
 };
