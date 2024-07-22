@@ -39,3 +39,17 @@ if (listBtnRefuseFriend.length > 0) {
   });
 }
 // End refuse request add friend
+
+// Accepet request add friend
+const listBtnAcceptFriend = document.querySelectorAll("[btn-accept-friend]");
+if (listBtnAcceptFriend.length > 0) {
+  listBtnAcceptFriend.forEach((button) => {
+    button.addEventListener("click", () => {
+      button.closest(".box-user").classList.add("accepted");
+      const userId = button.getAttribute("btn-accept-friend");
+
+      socket.emit("CLINET_ACCEPT_FRIEND", userId);
+    });
+  });
+}
+// End Accepet request add friend

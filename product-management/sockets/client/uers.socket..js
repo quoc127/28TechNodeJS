@@ -7,7 +7,7 @@ module.exports = async (res) => {
     socket.on("CLINET_ADD_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
       
-      // Add id "A" on acceptFriends "B"
+      // Add id "A" in acceptFriends "B"
       const existUserAinB = await User.findOne({
         _id: userId,
         acceptFriends: myUserId,
@@ -24,7 +24,7 @@ module.exports = async (res) => {
         );
       }
 
-      // Add id "B" on requestFriends "A"
+      // Add id "B" in requestFriends "A"
       const existUserBinA = await User.findOne({
         _id: myUserId,
         requestFriends: userId,
@@ -46,7 +46,7 @@ module.exports = async (res) => {
     socket.on("CLINET_CANCEL_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
       
-      // Delete id "A" on acceptFriends "B"
+      // Delete id "A" in acceptFriends "B"
       const existUserAinB = await User.findOne({
         _id: userId,
         acceptFriends: myUserId,
@@ -63,7 +63,7 @@ module.exports = async (res) => {
         );
       }
 
-      // Delete id "B" on requestFriends "A"
+      // Delete id "B" in requestFriends "A"
       const existUserBinA = await User.findOne({
         _id: myUserId,
         requestFriends: userId,
@@ -85,7 +85,7 @@ module.exports = async (res) => {
     socket.on("CLINET_REFUSE_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
       
-      // Delete id "A" on acceptFriends "B"
+      // Delete id "A" in acceptFriends "B"
       const existUserAinB = await User.findOne({
         _id: myUserId,
         acceptFriends: userId,
@@ -102,7 +102,7 @@ module.exports = async (res) => {
         );
       }
 
-      // Delete id "B" on requestFriends "A"
+      // Delete id "B" in requestFriends "A"
       const existUserBinA = await User.findOne({
         _id: userId,
         requestFriends: myUserId,
@@ -114,6 +114,57 @@ module.exports = async (res) => {
             _id: userId,
           },
           {
+            $pull: { requestFriends: myUserId },
+          }
+        );
+      }
+    });
+
+    // User accept request add friend
+    socket.on("CLINET_ACCEPT_FRIEND", async (userId) => {
+      const myUserId = res.locals.user.id;
+      
+      // Delete id "A" in acceptFriends "B" and add user_id, room_chat_id "A" in friendList "B"
+      const existUserAinB = await User.findOne({
+        _id: myUserId,
+        acceptFriends: userId,
+      });
+
+      if (existUserAinB) {
+        await User.updateOne(
+          {
+            _id: myUserId,
+          },
+          {
+            $push: {
+              friendList: {
+                user_id: userId,
+                room_chat_id: "",
+              }
+            },
+            $pull: { acceptFriends: userId },
+          }
+        );
+      }
+
+      // Delete id "B" in requestFriends "A" and add user_id, room_chat_id "B" in friendList "A"
+      const existUserBinA = await User.findOne({
+        _id: userId,
+        requestFriends: myUserId,
+      });
+
+      if (existUserBinA) {
+        await User.updateOne(
+          {
+            _id: userId,
+          },
+          {
+            $push: {
+              friendList: {
+                user_id: myUserId,
+                room_chat_id: "",
+              }
+            },
             $pull: { requestFriends: myUserId },
           }
         );
