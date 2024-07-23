@@ -49,6 +49,16 @@ module.exports = async (res) => {
         userId: userId,
         lengthAcceptFriends: lengthAcceptFriends,
       });
+
+      // Get info "A" return "B"
+      const infoUserA = await User.findOne({
+        _id: myUserId,
+      }).select("id avtar fullName");
+
+      socket.broadcast.emit("SERVER_RETURN_INFO_ACCEPT_FRIEND", {
+        userId: userId,
+        infoUserA: infoUserA,
+      });
     });
 
     // User cancel request add friend
