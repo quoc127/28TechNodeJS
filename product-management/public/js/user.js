@@ -53,3 +53,13 @@ if (listBtnAcceptFriend.length > 0) {
   });
 }
 // End Accepet request add friend
+
+// SERVER_RETURN_LENGTH_ACCEPT_FRIEND
+socket.on("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", (data) => {
+  const badgeUsersAccept = document.querySelector("[badge-users-accept]");
+  const userId = badgeUsersAccept.getAttribute("badge-users-accept");
+  if (userId == data.userId) {
+    badgeUsersAccept.innerHTML = data.lengthAcceptFriends;
+  }
+});
+// END SERVER_RETURN_LENGTH_ACCEPT_FRIEND

@@ -2,11 +2,11 @@ const User = require("../../models/user.model");
 
 module.exports = async (res) => {
   _io.once("connection", (socket) => {
-    // User send request add friend
     // "A" is get request add friend and "B" is who send request add friend
+    // User send request add friend
     socket.on("CLINET_ADD_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
-      
+
       // Add id "A" in acceptFriends "B"
       const existUserAinB = await User.findOne({
         _id: userId,
@@ -40,12 +40,21 @@ module.exports = async (res) => {
           }
         );
       }
+
+      // Get length acceptFriends "B" and return "B"
+      const infoUserB = await User.findOne({ _id: userId });
+      const lengthAcceptFriends = infoUserB.acceptFriends.length;
+
+      socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+        userId: userId,
+        lengthAcceptFriends: lengthAcceptFriends,
+      });
     });
 
     // User cancel request add friend
     socket.on("CLINET_CANCEL_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
-      
+
       // Delete id "A" in acceptFriends "B"
       const existUserAinB = await User.findOne({
         _id: userId,
@@ -84,7 +93,7 @@ module.exports = async (res) => {
     // User refuse request add friend
     socket.on("CLINET_REFUSE_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
-      
+
       // Delete id "A" in acceptFriends "B"
       const existUserAinB = await User.findOne({
         _id: myUserId,
@@ -123,7 +132,7 @@ module.exports = async (res) => {
     // User accept request add friend
     socket.on("CLINET_ACCEPT_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
-      
+
       // Delete id "A" in acceptFriends "B" and add user_id, room_chat_id "A" in friendList "B"
       const existUserAinB = await User.findOne({
         _id: myUserId,
@@ -140,7 +149,7 @@ module.exports = async (res) => {
               friendList: {
                 user_id: userId,
                 room_chat_id: "",
-              }
+              },
             },
             $pull: { acceptFriends: userId },
           }
@@ -163,7 +172,7 @@ module.exports = async (res) => {
               friendList: {
                 user_id: myUserId,
                 room_chat_id: "",
-              }
+              },
             },
             $pull: { requestFriends: myUserId },
           }
