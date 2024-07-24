@@ -54,7 +54,7 @@ module.exports.request = async (req, res) => {
     }).select("id avatar fullName");
     res.render("client/pages/users/request.pug", {
       pageTitle: "Lời mời đã gửi",
-      users: users
+      users: users,
     });
   } catch (error) {
     console.log(error);
@@ -80,7 +80,7 @@ module.exports.accept = async (req, res) => {
     }).select("id avatar fullName");
     res.render("client/pages/users/accept.pug", {
       pageTitle: "Lời mời kết bạn",
-      users: users
+      users: users,
     });
   } catch (error) {
     console.log(error);
@@ -99,16 +99,21 @@ module.exports.friend = async (req, res) => {
       _id: userId,
     });
     const friendList = myUser.friendList;
-    const friendListId = friendList.map(item => item.user_id);
+    const friendListId = friendList.map((item) => item.user_id);
     const users = await User.find({
       _id: { $in: friendListId },
       status: "active",
       deleted: false,
     }).select("id avatar fullName statusOnline");
 
+    users.forEach((user) => {
+      const infoUser = friendList.find((item) => item.user_id == user.id);
+      user.roomChatId = infoUser.room_chat_id;
+    });
+
     res.render("client/pages/users/friend.pug", {
       pageTitle: "Danh sách bạn bè",
-      users: users
+      users: users,
     });
   } catch (error) {
     console.log(error);
