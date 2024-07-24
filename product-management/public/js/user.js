@@ -115,23 +115,23 @@ socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
       `;
       dataUsersAccept.appendChild(newBoxUser);
       // End show the user outside the interface
-  
+
       // Remove request add friend
       const btnRefuseFriend = newBoxUser.querySelector("[btn-refuse-friend]");
       btnRefuseFriend.addEventListener("click", () => {
         btnRefuseFriend.closest(".box-user").classList.add("refuse");
         const userId = btnRefuseFriend.getAttribute("btn-refuse-friend");
-  
+
         socket.emit("CLINET_REFUSE_FRIEND", userId);
       });
       // End remove request add friend
-  
+
       // Accept request add friend
       const btnAcceptFriend = newBoxUser.querySelector("[btn-accept-friend]");
       btnAcceptFriend.addEventListener("click", () => {
         btnAcceptFriend.closest(".box-user").classList.add("accepted");
         const userId = btnAcceptFriend.getAttribute("btn-accept-friend");
-  
+
         socket.emit("CLINET_ACCEPT_FRIEND", userId);
       });
       // End accept request add friend
@@ -144,7 +144,7 @@ socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
 
   if (dataUsersNotFriend) {
     const userId = dataUsersNotFriend.getAttribute("data-users-not-friend");
-  
+
     if (userId == data.userId) {
       // Delete "A" from "B"s list
       const boxUserRemove = dataUsersNotFriend.querySelector(
@@ -155,7 +155,7 @@ socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
       }
     }
   }
-  
+
   // End user page
 });
 // END SERVER_RETURN_INFO_ACCEPT_FRIEND
@@ -176,6 +176,29 @@ socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
       }
     }
   }
-  
 });
 // End SERVER_RETURN_USER_ID_CANCEL_FRIEND
+
+// SERVER_RETURN_USER_ONLINE
+socket.on("SERVER_RETURN_USER_ONLINE", (userId) => {
+  const dataUserFriend = document.querySelector("[data-user-friend]");
+  if (dataUserFriend) {
+    const boxUser = dataUserFriend.querySelector(`[user-id="${userId}"]`);
+    if (boxUser) {
+      boxUser.querySelector("[status]").setAttribute("status", "online");
+    }
+  }
+});
+// End SERVER_RETURN_USER_ONLINE
+
+// SERVER_RETURN_USER_OFFLINE
+socket.on("SERVER_RETURN_USER_OFFLINE", (userId) => {
+  const dataUserFriend = document.querySelector("[data-user-friend]");
+  if (dataUserFriend) {
+    const boxUser = dataUserFriend.querySelector(`[user-id="${userId}"]`);
+    if (boxUser) {
+      boxUser.querySelector("[status]").setAttribute("status", "offline");
+    }
+  }
+});
+// End SERVER_RETURN_USER_OFFLINE
